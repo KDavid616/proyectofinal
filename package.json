@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "dotenv": "^16.5.0",
+    "ts-node": "^10.9.2"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "scripts": {
+    "start": "concurrently \"cd backend && npx ts-node src/app.ts\" \"cd frontend && set NODE_OPTIONS=--openssl-legacy-provider && ng serve\""
+  }
+}

@@ -1,0 +1,55 @@
+.user-management-system/frontend/src/app/components/user-management/user-management.component.css
+/* Estilos para el componente de gestión de usuarios */
+
+.user-management {
+    padding: 20px;
+}
+
+.user-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.user-table th, .user-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.user-table th {
+    background-color: #f2f2f2;
+    text-align: left;
+}
+
+.button {
+    background-color: #4CAF50; /* Verde */
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color: #45a049;
+}
+
+.edit-button {
+    background-color: #2196F3; /* Azul */
+}
+
+.edit-button:hover {
+    background-color: #0b7dda;
+}
+
+.delete-button {
+    background-color: #f44336; /* Rojo */
+}
+
+.delete-button:hover {
+    background-color: #da190b;
+}
+
+.success-message {
+    color: green;
+    font-weight: bold;
+    margin-bottom: 10px;
+}

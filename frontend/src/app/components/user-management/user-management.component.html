@@ -1,0 +1,147 @@
+<div *ngIf="showToast" class="fixed top-5 right-5 z-50">
+  <div
+    class="flex items-center space-x-2 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg shadow-md transition ease-in-out duration-300"
+  >
+    <svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+      <path
+        fill-rule="evenodd"
+        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.707a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+        clip-rule="evenodd"
+      ></path>
+    </svg>
+    <span class="text-sm font-medium">{{ toastMessage }}</span>
+  </div>
+</div>
+
+<div class="min-h-screen bg-gray-100 py-8 px-4">
+  <div class="max-w-4xl mx-auto bg-white shadow-md rounded-3xl p-8">
+    <!-- Encabezado con el nombre del usuario -->
+    <div class="flex items-center justify-between mb-6">
+      <h1 class="text-2xl font-semibold text-gray-800">Gestión de Usuarios</h1>
+      <div class="flex items-center space-x-2">
+        <svg
+          class="w-8 h-8 text-gray-600"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M10 18a8 8 0 100-16 8 8 0 000 16zm0-4a4 4 0 100-8 4 4 0 000 8z"
+            clip-rule="evenodd"
+          ></path>
+        </svg>
+        <span class="text-lg font-medium text-gray-700">{{ userName }}</span>
+      </div>
+    </div>
+
+    <!-- Tabla de usuarios -->
+    <div class="overflow-x-auto mb-10">
+      <table class="w-full table-auto text-left text-sm text-gray-700">
+        <thead>
+          <tr class="bg-gray-200">
+            <th class="px-4 py-2">Nombre de Usuario</th>
+            <th class="px-4 py-2">Email</th>
+            <th class="px-4 py-2">Rol</th>
+            <th *ngIf="userRole === 'Admin' || userRole === 'Editor'" class="px-4 py-2">Actualizar Rol</th>
+            <th *ngIf="userRole === 'Admin'" class="px-4 py-2">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of users" class="border-t">
+            <td class="px-4 py-2">{{ user.username }}</td>
+            <td class="px-4 py-2">{{ user.email }}</td>
+            <td class="px-4 py-2">{{ user.role }}</td>
+            <td *ngIf="userRole === 'Admin' || userRole === 'Editor'" class="px-4 py-2">
+              <select
+                [(ngModel)]="user.role"
+                (change)="updateUserRole(user._id, user.role)"
+                class="border border-gray-300 rounded-lg px-2 py-1 focus:outline-none focus:border-blue-400"
+              >
+                <option value="Admin">Admin</option>
+                <option value="Editor">Editor</option>
+                <option value="Viewer">Viewer</option>
+              </select>
+            </td>
+            <td *ngIf="userRole === 'Admin'" class="px-4 py-2">
+              <button
+                (click)="deleteUser(user._id)"
+                class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg text-sm"
+              >
+                Eliminar
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Formulario de usuario -->
+    <div *ngIf="userRole === 'Admin'" class="mt-10">
+      <h2 class="text-xl font-semibold text-gray-800 mb-4">
+        {{ isEditMode ? 'Editar Usuario' : 'Registrar Usuario' }}
+      </h2>
+
+      <form (ngSubmit)="isEditMode ? updateUser() : registerUser()" class="space-y-4">
+        <div>
+          <label for="username" class="block text-sm text-gray-600">Nombre de Usuario:</label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            [(ngModel)]="userForm.username"
+            required
+            class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-400"
+          />
+        </div>
+
+        <div>
+          <label for="email" class="block text-sm text-gray-600">Correo Electrónico:</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            [(ngModel)]="userForm.email"
+            required
+            class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-400"
+          />
+          <div *ngIf="errorMessage" class="text-red-600 text-sm mt-1">{{ errorMessage }}</div>
+        </div>
+
+        <div>
+          <label for="password" class="block text-sm text-gray-600">Contraseña:</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            [(ngModel)]="userForm.password"
+            required
+            class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-400"
+          />
+        </div>
+
+        <div>
+          <label for="role" class="block text-sm text-gray-600">Rol:</label>
+          <select
+            id="role"
+            name="role"
+            [(ngModel)]="userForm.role"
+            required
+            class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-400"
+          >
+            <option value="Admin">Admin</option>
+            <option value="Editor">Editor</option>
+            <option value="Viewer">Viewer</option>
+          </select>
+        </div>
+
+        <button
+          type="submit"
+          class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg transition duration-150"
+        >
+          {{ isEditMode ? 'Actualizar' : 'Registrar' }}
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
